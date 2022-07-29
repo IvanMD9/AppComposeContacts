@@ -1,4 +1,4 @@
-package com.example.appcomposecontacts
+package com.example.appcomposecontacts.presentation
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
