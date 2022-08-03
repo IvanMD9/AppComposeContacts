@@ -15,6 +15,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.appcomposecontacts.R
+import com.example.appcomposecontacts.ui.theme.BackgroundMyCard
 
 @Composable
 fun MyContactCard() {
@@ -28,7 +29,7 @@ fun MyContactCard() {
                 modifier = Modifier
                     .size(60.dp)
                     .clip(CircleShape)
-                    .background(Color.LightGray),
+                    .background(BackgroundMyCard),
                 contentAlignment = Alignment.Center
             ) {
                 Image(
