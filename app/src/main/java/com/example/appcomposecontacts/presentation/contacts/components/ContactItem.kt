@@ -20,7 +20,7 @@ fun ContactsItem(
         modifier = modifier,
     ) {
         Text(
-            text = contact.name,
+            text = contact.name + " " + contact.surname,
             color = Color.Black,
             fontSize = 18.sp,
             modifier = Modifier

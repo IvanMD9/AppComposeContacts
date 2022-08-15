@@ -20,6 +20,6 @@ interface Dao {
     @Delete
     suspend fun deleteContact(contact: Contact)
 
-    @Query("SELECT * FROM contacts WHERE name LIKE :search OR surname LIKE :search")
-    fun searchContacts(search : String) : Flow<List<Contact>>
+    @Query("SELECT * FROM contacts WHERE LOWER(name) LIKE '%' || LOWER(:search) || '%' OR UPPER(:search)")
+    suspend fun searchContacts(search: String): List<Contact>
 }

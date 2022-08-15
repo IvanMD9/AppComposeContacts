@@ -36,20 +36,20 @@ fun ContactsScreen(
     navController: NavController,
     viewModel: ContactsListViewModel = hiltViewModel()
 ) {
-    val state = viewModel.state.value
-    val contactText = viewModel.searchText.value
+    val state = viewModel.state
+    val stateHint = viewModel.searchText.value
 
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(15.dp)
+            .padding(start = 15.dp, end = 15.dp, top = 15.dp, bottom = 70.dp)
     ) {
         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
             Image(
                 painter = painterResource(id = R.drawable.ic_add_contacts),
                 contentDescription = "Add contact",
                 modifier = Modifier.clickable {
-                    navController.navigate(NavigationScreen.ContactsDetailScreen.route)
+                    navController.navigate(NavigationScreen.AddEditContactsScreen.route)
                 }
             )
         }
@@ -62,19 +62,25 @@ fun ContactsScreen(
             fontStyle = FontStyle.Normal
         )
         Spacer(modifier = Modifier.height(10.dp))
+//        OutlinedTextField(
+//            value = state.textSearch,
+//            onValueChange = {
+//                viewModel.onEvent(ContactsEvent.SearchContacts(it))
+//            },
+//            modifier = Modifier
+//                .fillMaxWidth()
+//        )
         SearchText(
-            text = contactText.textSearch,
-            hint = contactText.hintSearch,
+            text = stateHint.textSearch,
+            hint = stateHint.hintSearch,
             onValueChange = {
                 viewModel.onEvent(ContactsEvent.EnteredSearchText(it))
-            },
-            onSearch = {
-
+                viewModel.onEvent(ContactsEvent.SearchContacts(it))
             },
             onFocusChange = {
                 viewModel.onEvent(ContactsEvent.ChangeSearchFocus(it))
             },
-            isHintVisible = contactText.isHintVisibility,
+            isHintVisible = stateHint.isHintVisibility,
         )
         Spacer(modifier = Modifier.height(15.dp))
         Divider()
@@ -82,7 +88,11 @@ fun ContactsScreen(
         MyContactCard()
         Spacer(modifier = Modifier.height(10.dp))
 
-        LazyColumn(modifier = Modifier.fillMaxSize()) {
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(bottom = 15.dp)
+        ) {
             items(state.listContacts, { contact: Contact -> contact.id!! }) { contacts ->
                 val stateList = rememberDismissState(
                     // Здесь происходит удаление свайпом
@@ -142,12 +152,12 @@ fun ContactsScreen(
                             .fillMaxWidth()
                             .clickable {
                                 navController.navigate(
-                                    NavigationScreen.ContactsDetailScreen.route + "?contactId=${contacts.id}"
+                                    NavigationScreen.DetailItemContactScreen.route + "?contactId=${contacts.id}"
                                 )
-                            })
+                            }
+                        )
                     }
                 )
-                Divider()
             }
         }
     }
