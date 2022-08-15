@@ -1,5 +1,6 @@
 package com.example.appcomposecontacts.presentation.add_edit_contacts
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -7,25 +8,27 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.Divider
 import androidx.compose.material.Text
 import androidx.compose.material.rememberScaffoldState
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.example.appcomposecontacts.R
 import com.example.appcomposecontacts.presentation.add_edit_contacts.components.TextFieldContactDetail
+import com.example.appcomposecontacts.ui.theme.BackgroundButtonIcon
+import com.example.appcomposecontacts.ui.theme.BackgroundMyCard
 import kotlinx.coroutines.flow.collectLatest
 
 @Composable
 fun DataContactScreen(
     navController: NavController,
-    viewModel: ContactDetailViewModel = hiltViewModel()
+    viewModel: ContactAddEditViewModel = hiltViewModel()
 ) {
     val nameState = viewModel.nameContact.value
     val surnameState = viewModel.surnameContact.value
@@ -35,12 +38,12 @@ fun DataContactScreen(
     LaunchedEffect(key1 = true) {
         viewModel.eventFlow.collectLatest { event ->
             when (event) {
-                is ContactDetailViewModel.UiEvent.ShowSnackBar -> {
+                is ContactAddEditViewModel.UiEvent.ShowSnackBar -> {
                     scaffoldState.snackbarHostState.showSnackbar(
                         message = event.message
                     )
                 }
-                is ContactDetailViewModel.UiEvent.SaveNote -> {
+                is ContactAddEditViewModel.UiEvent.SaveNote -> {
                     navController.navigateUp()
                 }
             }
@@ -58,7 +61,7 @@ fun DataContactScreen(
         ) {
             Text(
                 text = "Отменить",
-                color = Color.Blue,
+                color = BackgroundButtonIcon,
                 fontSize = 18.sp,
                 modifier = Modifier.clickable {
                     navController.navigateUp()
@@ -71,11 +74,13 @@ fun DataContactScreen(
             )
             Text(
                 text = "Готово",
-                color = Color.Blue,
+                color = if (nameState.textContact.isBlank()
+                    && surnameState.textContact.isBlank()
+                ) Color.LightGray else BackgroundButtonIcon,
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.clickable {
-                    viewModel.onEvent(ContactsDetailEvent.SaveContact)
+                    viewModel.onEvent(ContactsAddEditEvent.SaveContact)
                 })
         }
         Spacer(modifier = Modifier.height(40.dp))
@@ -83,28 +88,38 @@ fun DataContactScreen(
             modifier = Modifier
                 .size(150.dp)
                 .clip(CircleShape)
-                .background(Color.LightGray)
+                .background(BackgroundMyCard)
                 .align(Alignment.CenterHorizontally)
         ) {
-            // Реализовать логику подставления перой буквы имени
-            Text(
-                text = "M",
-                textAlign = TextAlign.Center,
-                fontSize = 50.sp,
-                fontWeight = FontWeight.ExtraBold,
-                color = Color.White,
-                modifier = Modifier.align(Alignment.Center)
-            )
+            // Доработать функционал с отображением букв имени и фамилии
+            if (nameState.textContact.isBlank()) {
+                Image(
+                    painter = painterResource(id = R.drawable.ic_contacts),
+                    contentDescription = "My card",
+                    modifier = Modifier
+                        .align(Alignment.Center)
+                        .padding(5.dp)
+                        .size(120.dp)
+                )
+            } else {
+                Text(
+                    text = nameState.textContact.take(1).uppercase(),
+                    fontSize = 65.sp,
+                    fontWeight = FontWeight.ExtraBold,
+                    color = Color.White,
+                    modifier = Modifier.align(Alignment.Center)
+                )
+            }
         }
         Spacer(modifier = Modifier.height(25.dp))
         TextFieldContactDetail(
             text = nameState.textContact,
             hint = nameState.hintContact,
             onValueChange = {
-                viewModel.onEvent(ContactsDetailEvent.EnteredName(it))
+                viewModel.onEvent(ContactsAddEditEvent.EnteredName(it))
             },
             onFocusChange = {
-                viewModel.onEvent(ContactsDetailEvent.ChangeNameFocus(it))
+                viewModel.onEvent(ContactsAddEditEvent.ChangeNameFocus(it))
             },
             isHintVisible = nameState.isHintVisibility,
         )
@@ -113,10 +128,10 @@ fun DataContactScreen(
             text = surnameState.textContact,
             hint = surnameState.hintContact,
             onValueChange = {
-                viewModel.onEvent(ContactsDetailEvent.EnteredSurname(it))
+                viewModel.onEvent(ContactsAddEditEvent.EnteredSurname(it))
             },
             onFocusChange = {
-                viewModel.onEvent(ContactsDetailEvent.ChangeSurnameFocus(it))
+                viewModel.onEvent(ContactsAddEditEvent.ChangeSurnameFocus(it))
             },
             isHintVisible = surnameState.isHintVisibility,
         )
@@ -125,10 +140,10 @@ fun DataContactScreen(
             text = companyState.textContact,
             hint = companyState.hintContact,
             onValueChange = {
-                viewModel.onEvent(ContactsDetailEvent.EnteredCompany(it))
+                viewModel.onEvent(ContactsAddEditEvent.EnteredCompany(it))
             },
             onFocusChange = {
-                viewModel.onEvent(ContactsDetailEvent.ChangeCompanyFocus(it))
+                viewModel.onEvent(ContactsAddEditEvent.ChangeCompanyFocus(it))
             },
             isHintVisible = companyState.isHintVisibility
         )

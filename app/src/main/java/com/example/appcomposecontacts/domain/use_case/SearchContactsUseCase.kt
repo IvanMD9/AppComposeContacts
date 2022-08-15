@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.Flow
 class SearchContactsUseCase(
     private val repositoryContact: RepositoryContact
 ) {
-    operator fun invoke(search : String) : Flow<List<Contact>> {
+    suspend operator fun invoke(search : String) : List<Contact> {
         return repositoryContact.searchContacts(search)
     }
 }

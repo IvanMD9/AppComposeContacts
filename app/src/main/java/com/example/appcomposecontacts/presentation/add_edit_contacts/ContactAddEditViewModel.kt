@@ -14,7 +14,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class ContactDetailViewModel @Inject constructor(
+class ContactAddEditViewModel @Inject constructor(
     private val useCaseContact: UseCaseContact,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
@@ -41,7 +41,7 @@ class ContactDetailViewModel @Inject constructor(
     val eventFlow = _eventFlow.asSharedFlow()
 
     init {
-        savedStateHandle.get<Int>("contactId")?.let { contactId ->
+        savedStateHandle.get<Int>("contactIdEdit")?.let { contactId ->
             if (contactId != -1) {
                 viewModelScope.launch {
                     useCaseContact.getContactItemUseCase(contactId)?.also { contact ->
@@ -64,42 +64,42 @@ class ContactDetailViewModel @Inject constructor(
         }
     }
 
-    fun onEvent(event: ContactsDetailEvent) {
+    fun onEvent(event: ContactsAddEditEvent) {
         when (event) {
-            is ContactsDetailEvent.EnteredName -> {
+            is ContactsAddEditEvent.EnteredName -> {
                 _nameContact.value = nameContact.value.copy(
                     textContact = event.nameValue
                 )
             }
-            is ContactsDetailEvent.ChangeNameFocus -> {
+            is ContactsAddEditEvent.ChangeNameFocus -> {
                 _nameContact.value = nameContact.value.copy(
                     isHintVisibility = !event.focusNameState.isFocused &&
                             nameContact.value.textContact.isBlank()
                 )
             }
-            is ContactsDetailEvent.EnteredSurname -> {
+            is ContactsAddEditEvent.EnteredSurname -> {
                 _surnameContact.value = surnameContact.value.copy(
                     textContact = event.surnameValue
                 )
             }
-            is ContactsDetailEvent.ChangeSurnameFocus -> {
+            is ContactsAddEditEvent.ChangeSurnameFocus -> {
                 _surnameContact.value = surnameContact.value.copy(
                     isHintVisibility = !event.focusSurnameState.isFocused &&
                             surnameContact.value.textContact.isBlank()
                 )
             }
-            is ContactsDetailEvent.EnteredCompany -> {
+            is ContactsAddEditEvent.EnteredCompany -> {
                 _companyContact.value = companyContact.value.copy(
                     textContact = event.companyValue
                 )
             }
-            is ContactsDetailEvent.ChangeCompanyFocus -> {
+            is ContactsAddEditEvent.ChangeCompanyFocus -> {
                 _companyContact.value = companyContact.value.copy(
                     isHintVisibility = !event.focusCompanyState.isFocused &&
                             companyContact.value.textContact.isBlank()
                 )
             }
-            is ContactsDetailEvent.SaveContact -> {
+            is ContactsAddEditEvent.SaveContact -> {
                 viewModelScope.launch {
                     try {
                         useCaseContact.addContactUseCase(
