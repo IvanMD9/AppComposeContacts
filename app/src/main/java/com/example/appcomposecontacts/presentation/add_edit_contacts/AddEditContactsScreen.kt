@@ -81,7 +81,8 @@ fun DataContactScreen(
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.clickable {
                     viewModel.onEvent(ContactsAddEditEvent.SaveContact)
-                })
+                }
+            )
         }
         Spacer(modifier = Modifier.height(40.dp))
         Box(

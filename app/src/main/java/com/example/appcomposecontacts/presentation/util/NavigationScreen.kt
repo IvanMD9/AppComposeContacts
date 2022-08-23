@@ -5,6 +5,7 @@ sealed class NavigationScreen(val route : String) {
     object AddEditContactsScreen : NavigationScreen("add_edit_contact")
     object DetailItemContactScreen : NavigationScreen("detail_item_contact")
     object ContactsFavouritesScreen : NavigationScreen("favourites_contact")
+    object ContactsAddFromFavouritesScreen : NavigationScreen("add_favourites_contact")
     object ContactsNumberPhoneScreen : NavigationScreen("number_phone_contact")
 
     fun withArgs(vararg args : String) : String {

@@ -16,6 +16,7 @@ import androidx.navigation.navArgument
 import com.example.appcomposecontacts.presentation.add_edit_contacts.DataContactScreen
 import com.example.appcomposecontacts.presentation.contacts.ContactsScreen
 import com.example.appcomposecontacts.presentation.detail_info_contact.DetailInfoScreen
+import com.example.appcomposecontacts.presentation.favourites.FavouritesAddFromList
 import com.example.appcomposecontacts.presentation.favourites.FavouritesScreen
 import com.example.appcomposecontacts.presentation.number_phone.NumberPhoneScreen
 import com.example.appcomposecontacts.presentation.number_phone.NumberPhoneViewModel
@@ -54,8 +55,11 @@ fun NavigationButtonView(
         ) {
             DataContactScreen(navController = navController)
         }
-        composable(NavigationScreen.ContactsFavouritesScreen.route) {
-            FavouritesScreen()
+        composable(route = NavigationScreen.ContactsFavouritesScreen.route) {
+            FavouritesScreen(navController = navController)
+        }
+        composable(NavigationScreen.ContactsAddFromFavouritesScreen.route) {
+            FavouritesAddFromList(navController = navController)
         }
         composable(NavigationScreen.ContactsNumberPhoneScreen.route) {
             val viewModel = viewModel<NumberPhoneViewModel>()
