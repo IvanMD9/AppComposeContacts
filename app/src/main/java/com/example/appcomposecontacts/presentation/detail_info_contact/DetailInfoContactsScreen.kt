@@ -94,7 +94,9 @@ fun DetailInfoScreen(
                 .align(Alignment.CenterHorizontally),
         ) {
             Text(
-                text = if (stateName.value.textContact.isBlank()) stateSurname.value.textContact.take(1)
+                text = if (stateName.value.textContact.isBlank()) stateSurname.value.textContact.take(
+                    1
+                )
                 else stateName.value.textContact.take(1),
                 color = Color.White,
                 fontSize = 45.sp,
@@ -138,9 +140,11 @@ fun DetailInfoScreen(
             }
         }
         Spacer(modifier = Modifier.height(20.dp))
-        LazyColumn(modifier = Modifier
-            .fillMaxWidth()
-            .padding(bottom = 70.dp)) {
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 70.dp)
+        ) {
             item {
                 val context = LocalContext.current
                 val sM = SessionManager(context)
@@ -161,8 +165,9 @@ fun DetailInfoScreen(
                             fontSize = 14.sp,
                             fontStyle = FontStyle.Normal
                         )
+                        //val getPhone = sM.getPhone()
                         Text(
-                            text = sM.getPhone(),
+                            text = "",
                             color = BackgroundButtonIcon,
                             modifier = Modifier
                                 .fillMaxWidth(),

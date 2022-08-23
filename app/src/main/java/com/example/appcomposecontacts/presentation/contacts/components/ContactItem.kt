@@ -14,7 +14,7 @@ import com.example.appcomposecontacts.data.model.Contact
 @Composable
 fun ContactsItem(
     contact: Contact,
-    modifier: Modifier = Modifier,
+    modifier: Modifier = Modifier
 ) {
     Column(
         modifier = modifier,

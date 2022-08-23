@@ -18,7 +18,7 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideContactsDatabase(app : Application) : ContactDatabase {
+    fun provideContactsDatabase(app: Application): ContactDatabase {
         return Room.databaseBuilder(
             app,
             ContactDatabase::class.java,
@@ -28,19 +28,22 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideContactsRepository(db : ContactDatabase) : RepositoryContact {
+    fun provideContactsRepository(db: ContactDatabase): RepositoryContact {
         return ContactRepositoryImpl(db.getDao())
     }
 
     @Provides
     @Singleton
-    fun provideContactsUseCase(repositoryContact: RepositoryContact) : UseCaseContact {
+    fun provideContactsUseCase(repositoryContact: RepositoryContact): UseCaseContact {
         return UseCaseContact(
             getContactsUseCase = GetContactsUseCase(repositoryContact),
             deleteContactUseCase = DeleteContactUseCase(repositoryContact),
             getContactItemUseCase = GetContactItemUseCase(repositoryContact),
             addContactUseCase = AddContactUseCase(repositoryContact),
-            searchContactsUseCase = SearchContactsUseCase(repositoryContact)
+            searchContactsUseCase = SearchContactsUseCase(repositoryContact),
+            getListFavouritesContactsUseCase = GetListFavouritesContactsUseCase(repositoryContact),
+            addFavouritesContactUseCase = AddFavouritesContactUseCase(repositoryContact),
+            deleteFavouritesContactUseCase = DeleteFavouritesContactUseCase(repositoryContact)
         )
     }
 }

@@ -5,5 +5,8 @@ data class UseCaseContact(
     val deleteContactUseCase: DeleteContactUseCase,
     val getContactItemUseCase: GetContactItemUseCase,
     val addContactUseCase: AddContactUseCase,
-    val searchContactsUseCase: SearchContactsUseCase
+    val searchContactsUseCase: SearchContactsUseCase,
+    val getListFavouritesContactsUseCase: GetListFavouritesContactsUseCase,
+    val addFavouritesContactUseCase: AddFavouritesContactUseCase,
+    val deleteFavouritesContactUseCase: DeleteFavouritesContactUseCase
 )

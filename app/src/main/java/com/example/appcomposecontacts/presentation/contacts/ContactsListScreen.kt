@@ -36,7 +36,7 @@ fun ContactsScreen(
     navController: NavController,
     viewModel: ContactsListViewModel = hiltViewModel()
 ) {
-    val state = viewModel.state
+    val state = viewModel.state.value
     val stateHint = viewModel.searchText.value
 
     Column(
@@ -62,19 +62,10 @@ fun ContactsScreen(
             fontStyle = FontStyle.Normal
         )
         Spacer(modifier = Modifier.height(10.dp))
-//        OutlinedTextField(
-//            value = state.textSearch,
-//            onValueChange = {
-//                viewModel.onEvent(ContactsEvent.SearchContacts(it))
-//            },
-//            modifier = Modifier
-//                .fillMaxWidth()
-//        )
         SearchText(
-            text = stateHint.textSearch,
+            text = state.textSearch,
             hint = stateHint.hintSearch,
             onValueChange = {
-                viewModel.onEvent(ContactsEvent.EnteredSearchText(it))
                 viewModel.onEvent(ContactsEvent.SearchContacts(it))
             },
             onFocusChange = {

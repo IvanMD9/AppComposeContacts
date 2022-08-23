@@ -24,17 +24,18 @@ class ContactsListViewModel @Inject constructor(
     private val useCaseContact: UseCaseContact
 ) : ViewModel() {
 
-    var state by mutableStateOf(ContactsState())
+    private val _state = mutableStateOf(ContactsState())
+    val state: State<ContactsState> = _state
 
     private val _searchText = mutableStateOf(
         ContactsState(
             hintSearch = "Поиск"
         )
     )
-
     val searchText: State<ContactsState> = _searchText
+
     private var getContactsJob: Job? = null
-    //private var getSearchJob: Job? = null
+    private var getSearchJob: Job? = null
 
     init {
         getContacts()
@@ -48,14 +49,14 @@ class ContactsListViewModel @Inject constructor(
                 }
             }
             is ContactsEvent.SearchContacts -> {
-//                state = state.copy(
-//                    textSearch = event.search
-//                )
-//                getSearchJob?.cancel()
-//                getSearchJob = viewModelScope.launch {
-//                    delay(500L)
-//                    getContacts()
-//                }
+                _state.value = state.value.copy(
+                    textSearch = event.search
+                )
+                getSearchJob?.cancel()
+                getSearchJob = viewModelScope.launch {
+                    delay(500L)
+                    getSearchContacts()
+                }
             }
             is ContactsEvent.EnteredSearchText -> {
                 _searchText.value = searchText.value.copy(
@@ -74,34 +75,33 @@ class ContactsListViewModel @Inject constructor(
     private fun getContacts() {
         getContactsJob?.cancel()
         getContactsJob = useCaseContact.getContactsUseCase().onEach { contacts ->
-            state = state.copy(
+            _state.value = state.value.copy(
                 listContacts = contacts as MutableList<Contact>
             )
         }.launchIn(viewModelScope)
     }
 
-//    private fun getContacts(
-//        query: String = state.textSearch.lowercase(),
-//        fetchFromRemote: Boolean = false
-//    ) {
-//        viewModelScope.launch {
-//            repositoryContact
-//                .getListContacts(fetchFromRemote, query)
-//                .collect { result ->
-//                    when (result) {
-//                        is Resource.Success -> {
-//                            result.data?.let { contacts ->
-//                                state = state.copy(
-//                                    listContacts = contacts
-//                                )
-//                            }
-//                        }
-//                        is Resource.Error -> Unit
-//                        is Resource.Loading -> {
-//                            state = state.copy(isLoading = result.isLoading)
-//                        }
-//                    }
-//                }
-//        }
-//    }
+    private fun getSearchContacts(
+        query: String = _state.value.textSearch.lowercase(),
+    ) {
+        viewModelScope.launch {
+            repositoryContact
+                .searchContacts(query)
+                .collect { result ->
+                    when (result) {
+                        is Resource.Success -> {
+                            result.data?.let { contacts ->
+                                _state.value = state.value.copy(
+                                    listContacts = contacts
+                                )
+                            }
+                        }
+                        is Resource.Error -> Unit
+                        is Resource.Loading -> {
+                            _state.value = state.value.copy(isLoading = result.isLoading)
+                        }
+                    }
+                }
+        }
+    }
 }
